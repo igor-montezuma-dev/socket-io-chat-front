@@ -1,11 +1,19 @@
-import { format } from "date-fns";
 import { Camera, Mail, User } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 
 const ProfilePage = () => {
   const { authUser, isUpdatingProfile, updateProfile } = useAuthStore();
   const [selectedImg, setSelectedImg] = useState(null);
+  const [formattedDate, setFormattedDate] = useState('');
+
+
+  useEffect(() => {
+    if (authUser?.createdAt) {
+      const date = authUser.createdAt.split("T")[0].split("-").reverse().join("/");
+      setFormattedDate(date);
+    }
+  }, [authUser]);
 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
@@ -92,7 +100,9 @@ const ProfilePage = () => {
               <div className="flex items-center justify-between py-2 border-b border-zinc-700">
                 <span>Membro desde</span>
                 <span>
-                  {format(new Date(authUser.createdAt), "dd/MM/yyyy")}
+                  <span>
+                  {formattedDate}
+                  </span>
                 </span>
               </div>
               <div className="flex items-center justify-between py-2">
